@@ -77,16 +77,31 @@ if __name__ == '__main__':
             name = random.choice(personNames[0:12021])
             tem_n = random.choice(langu_tem_names)
             tem_name = tem_n.format(name)
+        for n in tem_name:
+            if n == name[0]:
+                print(n + ' B-Per\n')
+            elif n == name[1] or name[2]:
+                print(n + ' I-Per\n')
+            else:
+                print(n + ' O\n')
+
+
+    """        
             only_names.append(tem_name)
         only_names = list(set(only_names))
 
-        all_names = ''
+        all_names = '我叫姬野，荒野的野'
         for tem_na in only_names:
             all_names = all_names + ' ' + tem_na
         print(all_names)
         for i in all_names:
-
-            f.write(i + ' O\n')
+            if i != ' ':
+                print(i)
+                f.write(i + ' O\n')
+            elif i == ' ':
+                f.write(i + ' \n')
+    """
+# 一条一条的标注
 
 
 
