@@ -3,6 +3,8 @@
 # @Author  : Zhang
 # @File    : tran_data.py
 # -*- coding:utf-8 -*-
+"""写一个标注文本的软件包，单条语句输入，输出一个标注好的文本（依据不同类型来输出）"""
+
 import xlrd
 import random
 
@@ -66,9 +68,9 @@ if __name__ == '__main__':
 
     personNames = extra_txt_data('常用汉语人名大全.txt') # 24042
 
+    # 人名 --> B-Per  I-Per    地址名 -->  B-Loc I-Loc
 
-
-    with open('language_data_2.txt', 'w', encoding='utf8') as f:
+    with open('test_data.txt', 'w', encoding='utf8') as f:
 
         only_names = []
         for _ in range(4500):
