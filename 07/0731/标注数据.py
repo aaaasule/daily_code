@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2019/7/31 0031 10:16
+# @Time    : 2019/7/31 0031 14:39
 # @Author  : Zhang
-# @File    : tran_data.py
-# -*- coding:utf-8 -*-
+# @File    : 标注数据.py
+
 """写一个标注文本的软件包，单条语句输入，输出一个标注好的文本（依据不同类型来输出）"""
 
 import xlrd
@@ -68,44 +68,41 @@ if __name__ == '__main__':
 
     personNames = extra_txt_data('常用汉语人名大全.txt') # 24042
 
+    # 人名 --> B-Per  I-Per    地址名 -->  B-Loc I-Loc
+
     with open('test_data.txt', 'w', encoding='utf8') as f:
 
-
-        # 只添名字
         only_names = []
         for _ in range(4500):
             name = random.choice(personNames[0:12021])
             tem_n = random.choice(langu_tem_names)
             tem_name = tem_n.format(name)
+            tem_name = tem_name + ' '
+            for n in tem_name:
+                if n == name[0]:
+                    f.write(n + ' B-Per\n')
+                elif n in str(name):
+                    f.write(n + ' I-Per\n')
+                else:
+                    if n != ' ':
+                        print(n)
+                        f.write(n + ' O\n')
+                    elif n == ' ':
+                        f.write(n + ' \n')
+
+
+    """        
             only_names.append(tem_name)
         only_names = list(set(only_names))
+
+        all_names = '我叫姬野，荒野的野'
         for tem_na in only_names:
-            f.write(tem_na + '\n')
-
-
-        # 只添地址
-        only_locations = []
-        locations = list(set(huiSuo_locations + bot_locations)) # 4735
-        for _ in range(4500):
-            location = random.choice(locations[0:2367])
-            tem_l = random.choice(langu_tem_locations)
-            tem_location = tem_l.format(location)
-            only_locations.append(tem_location)
-        only_locations = list(set(only_locations))
-        print(len(only_locations))
-        for tem_loc in only_locations:
-            f.write(tem_loc + '\n')
-
-
-        # 添加地址和名字
-        loca_names = []
-        for _ in range(10000):
-            tem_n_l = random.choice(langu_tem_loca_names)
-            name = random.choice(personNames[12021:])
-            location = random.choice(locations[2367:])
-            tem_name_location = tem_n_l.format(name,location)
-            loca_names.append(tem_name_location)
-        loca_names = list(set(loca_names))
-        print(len(loca_names))
-        for loca_name in loca_names:
-            f.write(loca_name + '\n')
+            all_names = all_names + ' ' + tem_na
+        print(all_names)
+        for i in all_names:
+            if i != ' ':
+                print(i)
+                f.write(i + ' O\n')
+            elif i == ' ':
+                f.write(i + ' \n')
+    """
