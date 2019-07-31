@@ -58,8 +58,6 @@ langu_tem_loca_names = ['你好！我是{}，我家在{}','那个,{}的家是{}'
                         ]
 
 
-
-
 if __name__ == '__main__':
 
     huiSuo_locations = extra_excel_data('会所 11.xls','数据列表1',1)
@@ -70,7 +68,7 @@ if __name__ == '__main__':
 
     # 人名 --> B-Per  I-Per    地址名 -->  B-Loc I-Loc
 
-    with open('test_data.txt', 'w', encoding='utf8') as f:
+    with open('tag_data.txt', 'w', encoding='utf8') as f:
 
         only_names = []
         for _ in range(4500):
@@ -80,29 +78,57 @@ if __name__ == '__main__':
             tem_name = tem_name + ' '
             for n in tem_name:
                 if n == name[0]:
-                    f.write(n + ' B-Per\n')
+                    f.write(n + ' B-PER\n')
                 elif n in str(name):
-                    f.write(n + ' I-Per\n')
+                    f.write(n + ' I-PER\n')
                 else:
                     if n != ' ':
-                        print(n)
                         f.write(n + ' O\n')
                     elif n == ' ':
                         f.write(n + ' \n')
 
 
-    """        
-            only_names.append(tem_name)
-        only_names = list(set(only_names))
+        # 只添地址
+        only_locations = []
+        locations = list(set(huiSuo_locations + bot_locations))  # 4735
+        for _ in range(4500):
+            location = random.choice(locations[0:2367])
+            tem_l = random.choice(langu_tem_locations)
+            tem_location = tem_l.format(location)
+            tem_location = tem_location + ' '
+            for l in tem_location:
+                if location:
+                    if l == location[0]:
+                        f.write(l + ' B-LOC\n')
+                    elif l in str(location):
+                        f.write(l + ' I-LOC\n')
+                    else:
+                        if l != ' ':
+                            f.write(l + ' O\n')
+                        elif l == ' ':
+                            f.write(l + ' \n')
 
-        all_names = '我叫姬野，荒野的野'
-        for tem_na in only_names:
-            all_names = all_names + ' ' + tem_na
-        print(all_names)
-        for i in all_names:
-            if i != ' ':
-                print(i)
-                f.write(i + ' O\n')
-            elif i == ' ':
-                f.write(i + ' \n')
-    """
+        # 添加地址和名字
+        loca_names = []
+        for _ in range(10000):
+            tem_n_l = random.choice(langu_tem_loca_names)
+            name = random.choice(personNames[12021:])
+            location = random.choice(locations[2367:])
+            tem_name_location = tem_n_l.format(name, location)
+            tem_name_location = tem_name_location + ' '
+            for n_l in tem_name_location:
+                if n_l == name[0]:
+                    f.write(n_l + ' B-PER\n')
+                elif n_l == location[0]:
+                    f.write(n_l + ' B-LOC\n')
+                elif n_l in str(name):
+                    f.write(n_l + ' I-PER\n')
+                elif n_l in str(location):
+                    f.write(n_l + ' I-LOC\n')
+                else:
+                    if n_l != ' ':
+                        f.write(n_l + ' O\n')
+                    elif n_l == ' ':
+                        f.write(n_l + ' \n')
+
+
