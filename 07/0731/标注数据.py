@@ -74,14 +74,19 @@ if __name__ == '__main__':
         for _ in range(4500):
             name = random.choice(personNames[0:12021])
             tem_n = random.choice(langu_tem_names)
+            # name = "高兴"
+            # tem_n = "很高兴认识你，{}先生"
             tem_name = tem_n.format(name)
             tem_name = tem_name + ' '
-
+            guolv = []
+            for i in tem_n:
+                if i in name:
+                    guolv.append(i)
 
             for n in tem_name:
                 if n == name[0]:
                     f.write(n + '   B-PER\n')
-                elif n in str(name):
+                elif n in str(name) and n not in guolv:
                     f.write(n + '   I-PER\n')
 
                 else:
@@ -89,6 +94,7 @@ if __name__ == '__main__':
                         f.write(n + '   O\n')
                     elif n == ' ':
                         f.write(n + '   \n')
+        print('guolv==>', guolv)
 
 
 

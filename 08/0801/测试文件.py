@@ -3,19 +3,23 @@
 # @Author  : Zhang
 # @File    : 测试文件.py
 
-m,n = (0,14)
-print(m,n)
+name = "高兴"
+tem_n = "很高兴认识你，{}先生"
+tem_name = tem_n.format(name)
+tem_name = tem_name + ' '
+guolv = []
+for i in tem_n:
+    if i in name:
+        guolv.append(i)
 
-def get_max_len(cards,card_len):
+for n in tem_name:
+    if n == name[0] and n not in guolv:
+        print(n + '   B-PER\n')
+    elif n in str(name) and n not in guolv:
+        print(n + '   I-PER\n')
 
-    arr = sorted(set(cards))
-    max_n,m = (0,len(arr))
-    for i in range(m-1):
-        n,j = (0,1)
-        x = arr[i]
-        if x + 1 == arr[i+1]:
-            while i + j < m and x + j == arr[i + j]:
-                j = j + 1
-            if max_n < j:
-                max_n = j
-    return max_n
+    else:
+        if n != ' ':
+            print(n + '   O\n')
+        elif n == ' ':
+            print(n + '   \n')
