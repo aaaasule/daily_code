@@ -147,7 +147,7 @@ if __name__ == '__main__':
             location = random.choice(locations[2367:])
 
             tem_name_location = tem_n_l.format(name, location)
-            tem_name_location = tem_name_location + ''
+            # tem_name_location = tem_name_location + ''
 
             guolv_na_lo = []
             for j in tem_n_l:
