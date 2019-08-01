@@ -76,59 +76,69 @@ if __name__ == '__main__':
             tem_n = random.choice(langu_tem_names)
             tem_name = tem_n.format(name)
             tem_name = tem_name + ' '
+
+
             for n in tem_name:
                 if n == name[0]:
-                    f.write(n + ' B-PER\n')
+                    f.write(n + '   B-PER\n')
                 elif n in str(name):
-                    f.write(n + ' I-PER\n')
+                    f.write(n + '   I-PER\n')
+
                 else:
                     if n != ' ':
-                        f.write(n + ' O\n')
+                        f.write(n + '   O\n')
                     elif n == ' ':
-                        f.write(n + ' \n')
+                        f.write(n + '   \n')
+
 
 
         # 只添地址
-        only_locations = []
-        locations = list(set(huiSuo_locations + bot_locations))  # 4735
-        for _ in range(4500):
-            location = random.choice(locations[0:2367])
-            tem_l = random.choice(langu_tem_locations)
-            tem_location = tem_l.format(location)
-            tem_location = tem_location + ' '
-            for l in tem_location:
-                if location:
-                    if l == location[0]:
-                        f.write(l + ' B-LOC\n')
-                    elif l in str(location):
-                        f.write(l + ' I-LOC\n')
-                    else:
-                        if l != ' ':
-                            f.write(l + ' O\n')
-                        elif l == ' ':
-                            f.write(l + ' \n')
+        # only_locations = []
+        # locations = list(set(huiSuo_locations + bot_locations))  # 4735
+        # for _ in range(4500):
+        #     location = random.choice(locations[0:2367])
+        #     tem_l = random.choice(langu_tem_locations)
+        #     tem_location = tem_l.format(location)
+        #     tem_location = tem_location + ' '
+        #     for l in tem_location:
+        #         if location:
+        #             if l == location[0]:
+        #                 f.write(l + ' B-LOC\n')
+        #             elif l in str(location):
+        #                 f.write(l + ' I-LOC\n')
+        #             else:
+        #                 if l != ' ':
+        #                     f.write(l + ' O\n')
+        #                 elif l == ' ':
+        #                     f.write(l + ' \n')
 
         # 添加地址和名字
-        loca_names = []
-        for _ in range(10000):
-            tem_n_l = random.choice(langu_tem_loca_names)
-            name = random.choice(personNames[12021:])
-            location = random.choice(locations[2367:])
-            tem_name_location = tem_n_l.format(name, location)
-            tem_name_location = tem_name_location + ' '
-            for n_l in tem_name_location:
-                if n_l == name[0]:
-                    f.write(n_l + ' B-PER\n')
-                elif n_l == location[0]:
-                    f.write(n_l + ' B-LOC\n')
-                elif n_l in str(name):
-                    f.write(n_l + ' I-PER\n')
-                elif n_l in str(location):
-                    f.write(n_l + ' I-LOC\n')
-                else:
-                    if n_l != ' ':
-                        f.write(n_l + ' O\n')
-                    elif n_l == ' ':
-                        f.write(n_l + ' \n')
+        # loca_names = []
+        # for _ in range(10000):
+        #     tem_n_l = random.choice(langu_tem_loca_names)
+        #     name = random.choice(personNames[12021:])
+        #     location = random.choice(locations[2367:])
+        #     for j in tem_n_l:
+        #         if j in name:
+        #             print(j)
+        #         elif j in location:
+        #             print(j)
+
+        #     tem_name_location = tem_n_l.format(name, location)
+        #     tem_name_location = tem_name_location + ' '
+        #     for n_l in tem_name_location:
+        #         if n_l == name[0]:
+        #             f.write(n_l + ' B-PER\n')
+        #         elif n_l == location[0]:
+        #             f.write(n_l + ' B-LOC\n')
+        #         elif n_l in str(name):
+        #             f.write(n_l + ' I-PER\n')
+        #         elif n_l in str(location):
+        #             f.write(n_l + ' I-LOC\n')
+        #         else:
+        #             if n_l != ' ':
+        #                 f.write(n_l + ' O\n')
+        #             elif n_l == ' ':
+        #                 f.write(n_l + ' \n')
 
 
