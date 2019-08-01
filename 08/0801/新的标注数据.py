@@ -125,14 +125,14 @@ if __name__ == '__main__':
                     if location:
                         if l == location[0]:
                             only_locations.append(l)
-                            f.write(l + ' B-LOC\n')
+                            f.write(l + '   B-LOC\n')
                         elif l in str(location):
-                            f.write(l + ' I-LOC\n')
+                            f.write(l + '   I-LOC\n')
                         else:
                             if l != ' ':
-                                f.write(l + ' O\n')
+                                f.write(l + '   O\n')
                             elif l == ' ':
-                                f.write(l + ' \n')
+                                f.write(l + '   \n')
         print(len(only_locations))
 
         # 添加地址和名字
@@ -156,16 +156,16 @@ if __name__ == '__main__':
                 for n_l in tem_name_location:
                     if n_l == name[0]:
                         loca_names.append(n_l)
-                        f.write(n_l + ' B-PER\n')
+                        f.write(n_l + '   B-PER\n')
                     elif n_l == location[0]:
-                        f.write(n_l + ' B-LOC\n')
+                        f.write(n_l + '   B-LOC\n')
                     elif n_l in str(name):
-                        f.write(n_l + ' I-PER\n')
+                        f.write(n_l + '   I-PER\n')
                     elif n_l in str(location):
-                        f.write(n_l + ' I-LOC\n')
+                        f.write(n_l + '   I-LOC\n')
                     else:
                         if n_l != ' ':
-                            f.write(n_l + ' O\n')
+                            f.write(n_l + '   O\n')
                         elif n_l == ' ':
-                            f.write(n_l + ' \n')
+                            f.write(n_l + '   \n')
         print(len(loca_names))
