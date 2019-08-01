@@ -3,23 +3,26 @@
 # @Author  : Zhang
 # @File    : 测试文件.py
 
-name = "高兴"
-tem_n = "很高兴认识你，{}先生"
-tem_name = tem_n.format(name)
-tem_name = tem_name + ' '
-guolv = []
-for i in tem_n:
-    if i in name:
-        guolv.append(i)
-
-for n in tem_name:
-    if n == name[0] and n not in guolv:
-        print(n + '   B-PER\n')
-    elif n in str(name) and n not in guolv:
-        print(n + '   I-PER\n')
-
-    else:
-        if n != ' ':
-            print(n + '   O\n')
-        elif n == ' ':
-            print(n + '   \n')
+# name = "高兴"
+# tem_n = "很高兴认识你，{}先生"
+# tem_name = tem_n.format(name)
+# tem_name = tem_name + ' '
+# guolv = []
+# for i in tem_n:
+#     if i in name:
+#         guolv.append(i)
+#
+# for n in tem_name:
+#     if n == name[0] and n not in guolv:
+#         print(n + '   B-PER\n')
+#     elif n in str(name) and n not in guolv:
+#         print(n + '   I-PER\n')
+#
+#     else:
+#         if n != ' ':
+#             print(n + '   O\n')
+#         elif n == ' ':
+#             print(n + '   \n')
+X = ['我','{','}','地址','{','}']
+id1 = [i for i,x in enumerate(X) if x==1]
+print(id1)

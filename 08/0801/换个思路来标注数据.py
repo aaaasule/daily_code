@@ -36,6 +36,37 @@ def extra_txt_data(fileName):
             names.append(name)
         return names
 
+def tag_name(name):
+    name_list = []
+    len_name = len(name)
+    for i in range(0,len_name):
+        if i == 0:
+            taged_name = name[i] + '\tB-PER'
+            name_list.append(taged_name)
+        else:
+            taged_name = name[i] + '\tI-PER'
+            name_list.append(taged_name)
+    return name_list
+
+def tag_location(location):
+    loca_list = []
+    len_location = len(location)
+    for i in range(0, len_location):
+        if i == 0:
+            taged_location = location[i] + '\tB-LOC'
+            loca_list.append(taged_location)
+        else:
+            taged_location = location[i] + '\tI-LOC'
+            loca_list.append(taged_location)
+    return loca_list
+
+def get_index(list):
+    list_k = []
+    for k,v in enumerate(list):
+        if v == '{':
+            print('k==>',k)
+            list_k.append(k)
+    return list_k
 
 langu_tem_names = ['你好！我叫{}', '你好！我的名字是{}', '很高兴认识你，我叫{}', '很高兴认识你，我的名字是{}',
                    '您好！我叫{}', '您好！我的名字是{}', '请问您是{}?', '我是{}', '{}，您好', '我是{}',
@@ -76,30 +107,78 @@ if __name__ == '__main__':
 
     # 人名 --> B-Per  I-Per    地址名 -->  B-Loc I-Loc
 
-    with open('tag_data_1.txt', 'w', encoding='utf8') as f:
+    with open('tag_data_2.txt', 'w', encoding='utf8') as f:
 
         # 只添名字
-        only_names = []
-        for _ in range(6000):
+        for _ in range(4500):
             name = random.choice(personNames[0:12021])
             tem_n = random.choice(langu_tem_names)
-            tem_name = tem_n.format(name)
+            list_name = []
+            for n in tem_n:
+                list_name.append(n)
+            start_name_index = tem_n.index('{')
+            list_name.insert(start_name_index,tag_name(name))
+            list_name.remove('{')
+            list_name.remove('}')
+            # print(list_1)
+            for i in list_name:
+                if len(i) == 1:
+                    f.write(i+'\tO\n')
+                else:
+                    for j in list(i):
+                        f.write(j+'\n')
+            f.write('\n')
 
 
         # 只添地址
-        only_locations = []
         locations = list(set(huiSuo_locations + bot_locations))
-        for _ in range(6000):
+        for _ in range(4500):
             location = random.choice(locations[0:2367])
             tem_l = random.choice(langu_tem_locations)
-            tem_location = tem_l.format(location)
+            list_location = []
+            for l in tem_l:
+                list_location.append(l)
+            start_loca_index = tem_l.index('{')
+
+            list_location.insert(start_loca_index, tag_location(location))
+            list_location.remove('{')
+            list_location.remove('}')
+
+            for i in list_location:
+                if len(i) == 1:
+                    f.write(i + '\tO\n')
+                else:
+                    for j in list(i):
+                        f.write(j + '\n')
+            f.write('\n')
 
 
         # 添加地址和名字
-        loca_names = []
-        for _ in range(12500):
+        for _ in range(10000):
             tem_n_l = random.choice(langu_tem_loca_names)
             name = random.choice(personNames[12021:])
             location = random.choice(locations[2367:])
+            list_location_name = []
+            for n_l in tem_n_l:
+                list_location_name.append(n_l)
+            k_1 = get_index(tem_n_l)[0]
+            k_2 = get_index(tem_n_l)[1]
 
-            tem_name_location = tem_n_l.format(name, location)
+            list_location_name.insert(k_1,tag_name(name))
+            list_location_name.insert(k_2+1,tag_location(location))
+            list_location_name.remove('{')
+            list_location_name.remove('}')
+            list_location_name.remove('{')
+            list_location_name.remove('}')
+
+            for i in list_location_name:
+                if len(i) == 1:
+                    f.write(i + '\tO\n')
+                else:
+                    for j in list(i):
+                        f.write(j + '\n')
+            f.write('\n')
+
+
+
+
