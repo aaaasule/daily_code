@@ -169,3 +169,7 @@ if __name__ == '__main__':
                         elif n_l == ' ':
                             f.write(n_l + '   \n')
         print(len(loca_names))
+
+#  人名 4489
+#  地址 4713
+#  人名和地址9225
