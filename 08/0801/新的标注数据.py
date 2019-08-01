@@ -72,15 +72,15 @@ if __name__ == '__main__':
 
     # 人名 --> B-Per  I-Per    地址名 -->  B-Loc I-Loc
 
-    with open('tag_data.txt', 'w', encoding='utf8') as f:
+    with open('tag_data_1.txt', 'w', encoding='utf8') as f:
 
         # 只添名字
         only_names = []
-        for _ in range(4500):
+        for _ in range(6000):
             name = random.choice(personNames[0:12021])
             tem_n = random.choice(langu_tem_names)
             tem_name = tem_n.format(name)
-            tem_name = tem_name + ' '
+            # tem_name = tem_name + '\n'
 
             # 过滤器 滤掉有相同字眼的
             guolv_name = []
@@ -93,30 +93,31 @@ if __name__ == '__main__':
                 for n in tem_name:
                     if n == name[0]:
                         only_names.append(n)
-                        f.write(n + '   B-PER\n')
+                        f.write(n + '\tB-PER\n')
                     elif n in str(name):
-                        f.write(n + '   I-PER\n')
-
+                        f.write(n + '\tI-PER\n')
                     else:
-                        if n != ' ':
-                            f.write(n + '   O\n')
-                        elif n == ' ':
-                            f.write(n + '   \n')
+                        f.write(n + '\tO\n')
+                f.write('\n')
+
         print(len(only_names))
 
         # 只添地址
         only_locations = []
         locations = list(set(huiSuo_locations + bot_locations))  # 4735
-        for _ in range(4500):
+        for _ in range(6000):
             location = random.choice(locations[0:2367])
             tem_l = random.choice(langu_tem_locations)
             tem_location = tem_l.format(location)
-            tem_location = tem_location + ' '
+            # tem_location = tem_location + '\n'
 
             guolv_loca = []
             for i in tem_l:
                 if i in location:
                     guolv_loca.append(i)
+            for l_t in location[1:]:
+                if l_t == location[0]:
+                    guolv_loca.append(l_t)
 
             if guolv_loca:
                 pass
@@ -125,30 +126,45 @@ if __name__ == '__main__':
                     if location:
                         if l == location[0]:
                             only_locations.append(l)
-                            f.write(l + '   B-LOC\n')
+                            f.write(l + '\tB-LOC\n')
+                            # print(l + '\tB-LOC\n')
                         elif l in str(location):
-                            f.write(l + '   I-LOC\n')
+                            f.write(l + '\tI-LOC\n')
+                            # print(l + '\tI-LOC\n')
                         else:
-                            if l != ' ':
-                                f.write(l + '   O\n')
-                            elif l == ' ':
-                                f.write(l + '   \n')
+                            f.write(l + '\tO\n')
+                            # print(l + '\tO\n')
+                f.write('\n')
         print(len(only_locations))
 
         # 添加地址和名字
+
+
         loca_names = []
-        for _ in range(10000):
+        for _ in range(12500):
             tem_n_l = random.choice(langu_tem_loca_names)
             name = random.choice(personNames[12021:])
             location = random.choice(locations[2367:])
 
             tem_name_location = tem_n_l.format(name, location)
-            tem_name_location = tem_name_location + ' '
+            tem_name_location = tem_name_location + ''
 
             guolv_na_lo = []
             for j in tem_n_l:
                 if j in name or j in location:
                     guolv_na_lo.append(j)
+            for n in name:
+                for l in location:
+                    if n == l:
+                        guolv_na_lo.append(n)
+            for loca in location[1:]:
+                if loca == location[0]:
+                    guolv_na_lo.append(loca)
+
+            if name[-1] == location[0]:
+                guolv_na_lo.append(name[-1])
+
+
 
             if guolv_na_lo:
                 pass
@@ -156,20 +172,27 @@ if __name__ == '__main__':
                 for n_l in tem_name_location:
                     if n_l == name[0]:
                         loca_names.append(n_l)
-                        f.write(n_l + '   B-PER\n')
+                        f.write(n_l + '\tB-PER\n')
+                        # print(n_l + '\tB-PER\n')
                     elif n_l == location[0]:
-                        f.write(n_l + '   B-LOC\n')
+                        f.write(n_l + '\tB-LOC\n')
+                        # print(n_l + '\tB-LOC\n')
                     elif n_l in str(name):
-                        f.write(n_l + '   I-PER\n')
+                        f.write(n_l + '\tI-PER\n')
+                        # print(n_l + '\tI-PER\n')
                     elif n_l in str(location):
-                        f.write(n_l + '   I-LOC\n')
+                        f.write(n_l + '\tI-LOC\n')
+                        # print(n_l + '\tI-LOC\n')
                     else:
-                        if n_l != ' ':
-                            f.write(n_l + '   O\n')
-                        elif n_l == ' ':
-                            f.write(n_l + '   \n')
-        print(len(loca_names))
+                        f.write(n_l + '\tO\n')
+                        # print(n_l + '\tO\n')
 
+                f.write('\n')
+        print(len(loca_names))
 #  人名 4489
 #  地址 4713
 #  人名和地址9225
+
+#  人名里有地址里的字眼
+#  人名的最后一个字是地址的第一个字
+#  模板中有人名和地址中的字
