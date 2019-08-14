@@ -14,3 +14,5 @@ print('CrazyEye堡垒机、Madking资产管理、TriAquae主机管理开源软�
 print('松下、公安部、飞信、中金公司、华尔街英语、Nokia中国、Advent软件、汽车之家')
 
 print('Coding、旅游、电影、音乐、妹子')
+
+# 胡乱学点什么，状态差得很
