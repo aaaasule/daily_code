@@ -5,6 +5,8 @@
 
 from bert_serving.client import BertClient
 
-bc = BertClient(ip="192.168.50.55",port=5555)
-# bc = BertClient(ip="47.93.9.85",port=5555)
-# bc.encode([])
+bc = BertClient()
+
+ad = bc.encode(['查一下话费有多少','我需要个三十元加油包','帮我查一下我的话费还有多少钱'])
+
+print(ad)
