@@ -5,6 +5,6 @@
 
 from bert_serving.client import BertClient
 
-# bc = BertClient(ip="192.168.50.55")
-bc = BertClient(ip="47.93.9.85")
-bc.encode([])
+bc = BertClient(ip="192.168.50.55",port=5555)
+# bc = BertClient(ip="47.93.9.85",port=5555)
+# bc.encode([])
