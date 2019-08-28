@@ -53,13 +53,13 @@ def ten_label(list1,list2,file_dir):
 
             f.write(list1[i] + '\t' + list2[i] + '\n')
 
-# ten_label(label_trains,text_trains,'ten_train.tsv')
+ten_label(label_trains,text_trains,'ten_train.tsv')
 # ten_label(label_tests,text_tests,"ten_test.tsv")
 # ten_label(label_complex_tests,text_tests,'fours_test.tsv')
 # ten_label(label_complex_trains,text_trains,'fours_train.tsv')
 
-print(len(set(label_complex_tests)))
-print(set(label_complex_trains))
+# print(len(set(label_complex_tests)))
+# print(set(label_complex_trains))
 
 
 
