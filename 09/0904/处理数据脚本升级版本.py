@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     # # 循环文件目录
     # file_path = list()
-    # with open("data.txt",'w',encoding='utf-8') as f:
+    # with open("data_bj_plot.txt",'w',encoding='utf-8') as f:
     #     for i in file_path:
     #         text = extra_seq(i)
     #         f.write(text)

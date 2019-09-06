@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     # # 只添名字
     only_names = []
-    with open('data.txt', 'a', encoding='utf8') as f:
+    with open('data_bj_plot.txt', 'a', encoding='utf8') as f:
         for name in personNames:
             for tem_name in langu_tem_names:
                 langu_name_goal = tem_name.format(name)
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     # # 只添地址
     only_locations = []
-    with open('data.txt', 'a', encoding='utf8') as f:
+    with open('data_bj_plot.txt', 'a', encoding='utf8') as f:
         locations = huiSuo_locations + bot_locations
         # print('locations==>',locations)
         for location in locations:

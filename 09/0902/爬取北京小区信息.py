@@ -66,7 +66,7 @@ def parse_3(urls):
 
 if __name__ == '__main__':
 
-    with open('data.txt','w',encoding='utf-8') as fp:
+    with open('data_bj_plot.txt','w',encoding='utf-8') as fp:
         url = "http://www.tcmap.com.cn/beijing/"
         data1, data2 = parse(url)
 

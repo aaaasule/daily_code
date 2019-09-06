@@ -12,26 +12,17 @@ import threading
 import time
 import json
 
-# class postrequests():
-#     def __init__(self):
-#         self.url = 'http://192.168.230.129:5000/'
-#         self.data = {
-#                 "list": ["我在胜古中路1号"]
-#         }
-#         # self.data = json.dumps(self.data)
-#
-#     def post(self):
-#         try:
-#             r = requests.post(self.url,self.data)
-#             print(r.text)
-#         except Exception as e:
-#             print(e)
-#
-#
-# def test_interface():
-#     test = postrequests()
-#     return test.post()
+# 时间装饰器
 
+def test_time(func):
+    def inner():
+        t1 = time.time()
+        func()
+        t2 = time.time()
+        print("当前请求花费时间为{}".format(t2-t1))
+    return inner
+
+@test_time
 def test_interface():
 
     url = "http://192.168.230.129:5000/"
@@ -47,7 +38,7 @@ def test_interface():
 
     response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
 
-    return response.text
+    print(response.text)
 
 
 
@@ -56,15 +47,15 @@ if __name__ == '__main__':
     try:
         i = 0
         # 开启线程数目
-        tasks_number = 1
+        tasks_number = 100
         print('测试启动')
-        time1 = time.clock()
+        # time1 = time.clock()
         while i < tasks_number:
             t = threading.Thread(target=test_interface())
             t.start()
             i +=1
-        time2 = time.clock()
-        times = time2 - time1
-        print(times/tasks_number)
+        # time2 = time.clock()
+        # times = time2 - time1
+        # print(times/tasks_number)
     except Exception as e:
         print(e)
