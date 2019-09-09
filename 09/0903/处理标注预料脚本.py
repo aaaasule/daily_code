@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     # # 循环文件目录
     # file_path = list()
-    # with open("data_bj_plot.txt",'w',encoding='utf-8') as f:
+    # with open("data_bj_plot.tsv",'w',encoding='utf-8') as f:
     #     for i in file_path:
     #         text = extra_seq(i)
     #         f.write(text)
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     file_root_dir = r"G:\下载\people-2014\train"
     file_dirs = get_file_dir(file_dir=file_root_dir)
 
-    with open("data_bj_plot.txt",'w',encoding='utf-8') as f:
+    with open("data_bj_plot.tsv",'w',encoding='utf-8') as f:
         for file_dir in file_dirs:
             text = extra_seq(file_dir)
             f.write(text)

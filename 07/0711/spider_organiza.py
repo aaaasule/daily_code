@@ -6,7 +6,7 @@ with open("origan.txt",'r',encoding='utf-8') as f:
     for i in data:
         data_list.append(i)
     print(data_list)
-    with open('data_bj_plot.txt','w',encoding='utf-8') as f1:
+    with open('data_bj_plot.tsv','w',encoding='utf-8') as f1:
         for j in data_list:
             print(j)
             f1.write(j[0:-1] + " nt\n")
