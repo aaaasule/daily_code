@@ -15,12 +15,17 @@ import json
 # 时间装饰器
 
 def test_time(func):
-    def inner():
-        t1 = time.time()
-        func()
-        t2 = time.time()
-        print("当前请求花费时间为{}".format(t2-t1))
+    def inner(i):
+        # t1 = time.time()
+        print("这条请求开始时间是：{}".format(time.time()))
+        func(i)
+        # t2 = time.time()
+        # print("当前请求花费时间为{}".format(t2-t1))
     return inner
+
+@test_time
+def index(i):
+    print("first_------>{}".format(i))
 
 @test_time
 def test_interface():
@@ -30,13 +35,13 @@ def test_interface():
     payload = {
         "list":["我在胜古中路1号"]
     }
-    headers = {
-        'content-type': "application/json",
-        'cache-control': "no-cache",
-        'postman-token': "363fcb86-c76a-57f5-dc39-d1d9bdd05d9d"
-        }
+    # headers = {
+    #     'content-type': "application/json",
+    #     'cache-control': "no-cache",
+    #     'postman-token': "363fcb86-c76a-57f5-dc39-d1d9bdd05d9d"
+    #     }
 
-    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+    response = requests.request("POST", url, data=json.dumps(payload), headers=None)
 
     print(response.text)
 
@@ -46,12 +51,13 @@ if __name__ == '__main__':
 #     login()
     try:
         i = 0
-        # 开启线程数目
-        tasks_number = 100
+        # 开启线程数目 本机最大  3500
+        tasks_number = 1000
         print('测试启动')
         # time1 = time.clock()
         while i < tasks_number:
-            t = threading.Thread(target=test_interface())
+            # t = threading.Thread(target=test_interface())
+            t = threading.Thread(target=index(i))
             t.start()
             i +=1
         # time2 = time.clock()
