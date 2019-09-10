@@ -16,50 +16,55 @@ import requests
 import gevent
 from gevent import monkey
 
-# 补丁
-monkey.patch_all()
+# # 补丁
+# monkey.patch_all()
+#
+# #** 请求URL **
+# url = 'http://127.0.0.1:8000/insert'
+# headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1;WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
+#            }
 
-#** 请求URL **
-url = 'http://127.0.0.1:8000/insert'
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1;WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'
-           }
 
-
-def make_data(num):
-    """制造请求数据"""
-    data = {
-        "id": num,
-        "name": "test" + num,
-    }
-    return data
+# def make_data(num):
+#     """制造请求数据"""
+#     data = {
+#         "id": num,
+#         "name": "test" + num,
+#     }
+#     return data
 
 
 def run():
-    """三种模拟请求"""
-    num = random.randint(100, 999)
-    data = make_data(num)
-    try:
-        # s1:request请求
-        req = request.Request(url=url, data=data, headers=headers, method="POST")
-        response = request.urlopen(req)
-        resp = response.read()
-        print("服务器返回值为:\n", resp.decode('utf-8'))
 
-        # s2:httpclient请求
-        # httpclient = http.client.HTTPConnection(host='127.0.0.1', port=8001)
-        # httpclient.request("POST", '/insert', data, headers)
-        # response = httpclient.getresponse()
-        # print(response.read().decode())
+    url = "http://192.168.230.129:5000/"
 
-        # s3:requests请求
-        # resp = requests.post(url=url, data=data, headers=headers)
-        # print("状态:\n", resp)
-        # print("请求头:\n", resp.headers)
-        # print("服务器返回值为:\n", resp.content.decode())
-    except URLError as e:
-        print('请求', e)
-    except Exception as e:
-        print('请求错误：', e)
+    payload = {
+              "list":["我在胜古中路1号"]
+            }
+    headers = {
+        'content-type': "application/json",
+        'cache-control': "no-cache",
+        'postman-token': "44bdf9df-2992-3a8b-7818-2752789d88fd"
+    }
+
+    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+
+    print(response.text)
+
+def run_my():
+
+    url = "http://192.168.50.131:8091/encode"
+
+    payload = {"id": 111,"texts": ["我想查花费"],"is_tokenized": False}
+    headers = {
+        'content-type': "application/json",
+        'cache-control': "no-cache",
+        'postman-token': "03825798-b9fb-7776-8f55-8fd28d4a0806"
+    }
+
+    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+
+    print(response.text)
 
 
 def call_gevent(count):
@@ -68,7 +73,7 @@ def call_gevent(count):
     run_gevent_list = []
     for i in range(count):
         print('--------------%d--Test-------------' % i)
-        run_gevent_list.append(gevent.spawn(run()))
+        run_gevent_list.append(gevent.spawn(run_my()))
     gevent.joinall(run_gevent_list)
     end = time.time()
     print('单次测试时间（平均）s:', (end - begin_time) / count)
