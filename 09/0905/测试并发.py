@@ -15,10 +15,10 @@ import json
 # 时间装饰器
 
 def test_time(func):
-    def inner(i):
+    def inner():
         # t1 = time.time()
         print("这条请求开始时间是：{}".format(time.time()))
-        func(i)
+        func()
         # t2 = time.time()
         # print("当前请求花费时间为{}".format(t2-t1))
     return inner
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         # time1 = time.clock()
         while i < tasks_number:
             # t = threading.Thread(target=test_interface())
-            t = threading.Thread(target=index(i))
+            t = threading.Thread(target=test_interface())
             t.start()
             i +=1
         # time2 = time.clock()
