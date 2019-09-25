@@ -6,51 +6,119 @@
 @file: NLP_mideeleware.py
 @time: 2019/9/19 14:18
 """
+import json
+
 from flask import Flask, request
-from bert_base.client import BertClient
-import random
+import redis
+import requests
+import time
+
 """
-1、从用户说那边接收参数（我这边可以写一个接口来接受参数）
-2、将用户说的参数传给用户ID对应的容器ID
-3、容器返回的内容在传回给用户
+每一个用户的每轮会话都应该记录下来
 """
 
 app = Flask(__name__)
 
-# 映射用户id和容器ipID的字典(一个list)
-map_dict = {}
+# 映射租户id和容器ipID的字典(一个list)
+map_dict = {
+    1: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
+    2: ["ip_1", "ip_2", "ip_3", "ip_4"],
+    3: ["ip_1", "ip_2", "ip_3", "ip_4"],
+    4: ["ip_1", "ip_2", "ip_3", "ip_4"]
+}
+
+# 规定端口号
+port = [8000,8080,8001]
+
+# 使用redis缓存来记录访客id和容器IP的对应关系
+conn = redis.Redis(host="127.0.0.1", port=6379, password="123456")
 
 
 # 暴露给用户说那边的接口,用于接收参数
-# 需要的参数：1,用户ID 2,用户说text 3,
-@app.route('/api/nlp_tenement/', methods=["POST"])
+@app.route('/api/nlp_tenement_middleware/', methods=["POST"])
 def nlp_interface():
+    """
+    lessee_id 租户ID   租户ID--一个租户ID对应的是一类服务器，比如租户是移动的，那么这个租户Id对应的有一个列表ip,列表中每一个ip对应的服务器都是为移动做的模型
+    visitor_id 访客ID  每一个访客第一次进来说第一句话的时候都会分配一个id(唯一的)，第二句话就根据这个id对应的ip来继续对话；第二次进来又重新分配了一个id
+    question 问题  用户说
+    record_id 回话ID  用户说的第一句话请求时recordID是空的，我这边返回了一个id,第二句话来请求我，recordID就是我给的
+    apiKey 校验用户身份 用来校验用户身份的，现在是写死的，以后会根据其他方法来进行校验 每隔两小时验证一次
+    """
     params = request.json
-    id = params["id"]
-    text = params["text"]
-    # print(params)
-    # 通过map_dict 来将用户指向对应的容器 IP
-    # contain_ip = map_dict[id]
-    contain_ip = "192.168.50.131"
-    """
-     同一个用户ID对应的几个容器如何选择,只选择一个容器
-    """
-    #调用容器中的模型
-    def bertModel(id, contain_ip, list_text):
-        with BertClient(ip=contain_ip, port=5575, port_out=5576, show_server_config=False, check_version=False,
-                        check_length=False, timeout=10000, mode='CLASS') as bc:
-            rst = bc.encode(list_text)
-            rst[0]["id"] = id
-        return rst[0]
+    lesseeId = params["lesseeId"]
+    visitorId = params["visitorId"] # vsitorId会有重复的可能吗？
+    question = params["question"]
+    recordId = params["recordId"]
+    apiKey = params["apiKey"]
 
-    # 容器返回的结果
-    resp_bert = bertModel(id=id, contain_ip=contain_ip, list_text=text)
+    # 获取apiKey
+    def getApiKey():
+        apiKey = "e10adc3949ba59abbe56e057f20f883e"
+        return apiKey
 
-    """将返回的结果给到对应ID的用户"""
-    def retutn_goal():
-        print(resp_bert)
+    # 校验apiKey 两小时一次
+    def checkApiKey(apiKey):
 
-    return True
+        if apiKey == getApiKey():
+            return True
+
+    # 分配路由 依据规则
+    def allocateRoute(lesseeId, visitorId, question, recordId):
+
+        # 确认租户Id来在寻找对应的容器IP列表 如果有就查找，没有就创建
+        if map_dict[lesseeId]:
+            containIps = map_dict[lesseeId]
+            """
+            具体应该选择的容器是哪一个, 怎么定？
+            """
+            # 根据访客ID来指定容器
+            conn.set(visitorId, containIps[0])
+
+            if recordId == " ":
+                recordId = params["visitorId"]
+            else:
+                pass
+
+
+        else:
+            pass
+
+        url = "http://{}".format(containIps[0])
+        data = {"visitorId": visitorId, "question": question}
+        return url, data, recordId
+
+    # 调用容器中的模型  并返回规定的参数给用户
+    def postContainModel(url, data):
+        print('data-->',data)
+        headers = {
+            'content-type': "application/json",
+            'cache-control': "no-cache",
+            'postman-token': "dab24781-8945-79b8-de26-cd5c2de6bba3"
+        }
+
+        response = requests.request("POST", url, data=json.dumps(data), headers=headers)
+
+        return response.text
+
+    # 记录每一个用户的会话流程
+    def recordSession():
+        pass
+
+
+
+
+    if checkApiKey(apiKey):
+        url, data, recordId = allocateRoute(lesseeId, visitorId, question, recordId)
+        postUrl = url + ':8000' + '/index/'
+
+        postContainResponse = postContainModel(url=postUrl,data=data)
+        # response = {
+        #     "url": postUrl,
+        #     "data": data,
+        #     "recordId": recordId
+        # }
+    return json.loads(postContainResponse)
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8001, debug=True)

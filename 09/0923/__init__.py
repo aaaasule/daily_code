@@ -3,7 +3,7 @@
 @version: ??
 @author: zhang
 @Mail: 123aaaasule@gmail.com
-@file: __init__.py.py
+@file: test_redis.py.py
 @time: 2019/9/23 10:15
 """
 list_test = [0.1,0.2,0.3]
