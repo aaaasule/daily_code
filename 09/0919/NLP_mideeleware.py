@@ -7,7 +7,7 @@
 @time: 2019/9/19 14:18
 """
 import json
-
+import pymysql
 from flask import Flask, request
 import redis
 import requests
@@ -22,16 +22,32 @@ app = Flask(__name__)
 # 映射租户id和容器ipID的字典(一个list)
 map_dict = {
     1: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
-    2: ["ip_1", "ip_2", "ip_3", "ip_4"],
-    3: ["ip_1", "ip_2", "ip_3", "ip_4"],
-    4: ["ip_1", "ip_2", "ip_3", "ip_4"]
+    2: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
+    3: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
+    4: ["127.0.0.1", "ip_2", "ip_3", "ip_4"]
 }
 
 # 规定端口号
-port = [8000,8080,8001]
+port = [8000, 8080, 8001]
 
 # 使用redis缓存来记录访客id和容器IP的对应关系
 conn = redis.Redis(host="127.0.0.1", port=6379, password="123456")
+
+"""
+# 连接
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='root',db='test',charset='utf8')
+
+# 设置游标
+consor = conn.cursor()
+sql = ''
+consor.execute(sql)
+
+# 先关闭游标
+consor.close()
+
+# 再关闭连接
+conn.close()
+"""
 
 
 # 暴露给用户说那边的接口,用于接收参数
@@ -65,7 +81,7 @@ def nlp_interface():
     # 分配路由 依据规则
     def allocateRoute(lesseeId, visitorId, question, recordId):
 
-        # 确认租户Id来在寻找对应的容器IP列表 如果有就查找，没有就创建
+        # 确认租户Id来在寻找对应的容器IP列表 如果有就查找
         if map_dict[lesseeId]:
             containIps = map_dict[lesseeId]
             """
@@ -100,11 +116,9 @@ def nlp_interface():
 
         return response.text
 
-    # 记录每一个用户的会话流程
+    # 记录每一个用户的会话流程 ？使用MySQL来记录用户的会话  id 访问时间
     def recordSession():
         pass
-
-
 
 
     if checkApiKey(apiKey):
@@ -112,11 +126,7 @@ def nlp_interface():
         postUrl = url + ':8000' + '/index/'
 
         postContainResponse = postContainModel(url=postUrl,data=data)
-        # response = {
-        #     "url": postUrl,
-        #     "data": data,
-        #     "recordId": recordId
-        # }
+
     return json.loads(postContainResponse)
 
 
