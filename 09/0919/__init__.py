@@ -6,14 +6,12 @@
 @file: test_redis.py.py
 @time: 2019/9/19 14:18
 """
+import redis
 
-text = " 朝鲜 最高领导人 金 正 恩 1日通 过朝鲜 各大 媒体发 表201 年新年贺 词， "
+conn = redis.Redis(host="127.0.0.1", port=6379, password="123456")
+conn.set(1,1)
 
-for i in text:
-    print("i---》",i.strip())
-
-txt  = [x for x in text if x != " "]
-
-print(txt)
-print(len(text))
-print(len(txt))
+if not conn.get(1):
+    print(1)
+else:
+    print(0)

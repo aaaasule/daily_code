@@ -17,7 +17,8 @@ def index():
     params = request.json
     id = params["visitorId"]
     text = params["question"]
-    response = {"id": id, "text": text}
+    recordID = params["recordId"]
+    response = {"id": id, "text": text, "recordId": recordID}
     return response
 
 

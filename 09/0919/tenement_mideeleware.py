@@ -3,7 +3,7 @@
 @version: ??
 @author: zhang
 @Mail: 123aaaasule@gmail.com
-@file: NLP_mideeleware.py
+@file: tenement_mideeleware.py
 @time: 2019/9/19 14:18
 """
 import json
@@ -19,16 +19,13 @@ import time
 
 app = Flask(__name__)
 
-# 映射租户id和容器ipID的字典(一个list)
-map_dict = {
-    1: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
-    2: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
-    3: ["127.0.0.1", "ip_2", "ip_3", "ip_4"],
-    4: ["127.0.0.1", "ip_2", "ip_3", "ip_4"]
+# 映射租户id和容器ipID的字典(一个list)  映射关系通过访问一个接口来调用
+mapDict = {
+    1: ["127.0.0.1", "ip_2"],
+    2: ["127.0.0.1", "ip_2"],
+    3: ["127.0.0.1", "ip_2"],
+    4: ["127.0.0.1", "ip_2"]
 }
-
-# 规定端口号
-port = [8000, 8080, 8001]
 
 # 使用redis缓存来记录访客id和容器IP的对应关系
 conn = redis.Redis(host="127.0.0.1", port=6379, password="123456")
@@ -49,10 +46,9 @@ consor.close()
 conn.close()
 """
 
-
 # 暴露给用户说那边的接口,用于接收参数
-@app.route('/api/nlp_tenement_middleware/', methods=["POST"])
-def nlp_interface():
+@app.route('/api/tenement_middleware/', methods=["POST"])
+def tenenment_interface():
     """
     lessee_id 租户ID   租户ID--一个租户ID对应的是一类服务器，比如租户是移动的，那么这个租户Id对应的有一个列表ip,列表中每一个ip对应的服务器都是为移动做的模型
     visitor_id 访客ID  每一个访客第一次进来说第一句话的时候都会分配一个id(唯一的)，第二句话就根据这个id对应的ip来继续对话；第二次进来又重新分配了一个id
@@ -61,8 +57,8 @@ def nlp_interface():
     apiKey 校验用户身份 用来校验用户身份的，现在是写死的，以后会根据其他方法来进行校验 每隔两小时验证一次
     """
     params = request.json
-    lesseeId = params["lesseeId"]
-    visitorId = params["visitorId"] # vsitorId会有重复的可能吗？
+    tenementId = params["tenementId"]
+    visitorId = params["visitorId"]
     question = params["question"]
     recordId = params["recordId"]
     apiKey = params["apiKey"]
@@ -78,30 +74,32 @@ def nlp_interface():
         if apiKey == getApiKey():
             return True
 
+    # 获取租户和容器的对应关系
+    def getRelation():
+        pass
+
     # 分配路由 依据规则
-    def allocateRoute(lesseeId, visitorId, question, recordId):
+    def allocateRoute(tenementId, visitorId, question, recordId):
 
         # 确认租户Id来在寻找对应的容器IP列表 如果有就查找
-        if map_dict[lesseeId]:
-            containIps = map_dict[lesseeId]
+        if mapDict[tenementId]:
+            containIps = mapDict[tenementId]
             """
-            具体应该选择的容器是哪一个, 怎么定？
+            同一个租户对应使用一个容器，只有当前容器达到了预设的并发量时，才会启动另一台容器
             """
-            # 根据访客ID来指定容器
-            conn.set(visitorId, containIps[0])
-
-            if recordId == " ":
-                recordId = params["visitorId"]
+            # 访客第一次请求的recordId值是空的
+            if recordId == " ": # 第一次请求是Flase
+                # 根据访客ID来指定容器 设置过期时间（ex= 单位是秒，px= 单位是毫秒）
+                conn.set(visitorId, containIps[0], ex=180)
+                recordId_1 = params["visitorId"]
+                print("recordId_1------>", recordId_1)
             else:
-                pass
 
+                recordId_1 = recordId
 
-        else:
-            pass
-
-        url = "http://{}".format(containIps[0])
-        data = {"visitorId": visitorId, "question": question}
-        return url, data, recordId
+            data = {"visitorId": visitorId, "question": question, "recordId": recordId_1}
+            url = "http://{}".format(containIps[0])
+        return url, data, recordId_1
 
     # 调用容器中的模型  并返回规定的参数给用户
     def postContainModel(url, data):
@@ -122,9 +120,11 @@ def nlp_interface():
 
 
     if checkApiKey(apiKey):
-        url, data, recordId = allocateRoute(lesseeId, visitorId, question, recordId)
+        url, data, recordId = allocateRoute(tenementId, visitorId, question, recordId)
         postUrl = url + ':8000' + '/index/'
-
+        print("url-->",url)
+        print("data-->", data)
+        print("recordId-->", recordId)
         postContainResponse = postContainModel(url=postUrl,data=data)
 
     return json.loads(postContainResponse)
