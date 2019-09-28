@@ -12,14 +12,17 @@ from flask import request
 
 app = Flask(__name__)
 
-@app.route('/index/', methods=["POST"])
+@app.route('/getAnswerByRobot/', methods=["POST"])
 def index():
     params = request.json
+
     id = params["visitorId"]
     text = params["question"]
-    recordID = params["recordId"]
-    response = {"id": id, "text": text, "recordId": recordID}
+    recordId = params["recordId"]
+
+    response = {"id": id, "text": text, "recordId": recordId}
+
     return response
 
 
-app.run("0.0.0.0",port=8000)
+app.run(host="0.0.0.0",port=8080)
